@@ -1,0 +1,115 @@
+{
+  "title": "Late Night Cipher",
+  "bpm": 88,
+  "time_signature": [4, 4],
+  "swing": 0.14,
+  "tracks": [
+    {
+      "name": "Drums",
+      "instrument": "sfz:acoustic_drums",
+      "volume": 0.95,
+      "humanize": {"timing_ms": 6, "velocity": 6},
+      "effects": ["drum_bus", {"type": "lowpass", "hz": 9000}],
+      "clips": [
+        {
+          "bar": 4,
+          "repeat": 11,
+          "length_bars": 1,
+          "pattern": {"kick": "x......x..x.....", "snare": "....x.......x..g", "hihat": "x.o.x.o.x.o.x.oo"}
+        },
+        {
+          "bar": 15,
+          "pattern": {"kick": "x......x..x.....", "snare": "....x.......xgxX", "hihat": "x.o.x.o.x.o....."}
+        },
+        {"bar": 4, "notes": [{"p": "crash", "t": 0, "v": 90}]},
+        {"bar": 16, "notes": [{"p": "kick", "t": 0, "v": 110}, {"p": "crash", "t": 0, "v": 100}]}
+      ]
+    },
+    {
+      "name": "Keys",
+      "instrument": "sfz:rhodes",
+      "volume": 0.55,
+      "pan": -0.15,
+      "strum_ms": 9,
+      "humanize": {"timing_ms": 10, "velocity": 8},
+      "effects": ["vinyl_warmth"],
+      "clips": [
+        {
+          "bar": 0,
+          "repeat": 4,
+          "length_bars": 4,
+          "chords": ["Am9", "Dm9", "Fmaj7", "E7"],
+          "every": 4,
+          "d": 3.5,
+          "oct": 3,
+          "v": 72
+        },
+        {"bar": 16, "chords": ["Am9"], "every": 4, "d": 4, "oct": 3, "v": 70}
+      ],
+      "reverb_send": 0.18
+    },
+    {
+      "name": "Bass",
+      "instrument": "sfz:bass_guitar",
+      "volume": 0.9,
+      "humanize": {"timing_ms": 6, "velocity": 6},
+      "clips": [
+        {
+          "bar": 4,
+          "repeat": 3,
+          "length_bars": 4,
+          "notes": [
+            {"p": "A1", "t": 0, "d": 1.5, "v": 105},
+            {"p": "A1", "t": 1.75, "d": 0.25, "v": 70},
+            {"p": "C2", "t": 2.5, "d": 0.5, "v": 90},
+            {"p": "E2", "t": 3, "d": 1, "v": 85},
+            {"p": "D2", "t": 4, "d": 1.5, "v": 105},
+            {"p": "D2", "t": 5.75, "d": 0.25, "v": 70},
+            {"p": "F2", "t": 6.5, "d": 0.5, "v": 90},
+            {"p": "A1", "t": 7, "d": 1, "v": 85},
+            {"p": "F1", "t": 8, "d": 1.5, "v": 105},
+            {"p": "F1", "t": 9.75, "d": 0.25, "v": 70},
+            {"p": "A1", "t": 10.5, "d": 0.5, "v": 90},
+            {"p": "C2", "t": 11, "d": 1, "v": 85},
+            {"p": "E1", "t": 12, "d": 1.5, "v": 105},
+            {"p": "E1", "t": 13.75, "d": 0.25, "v": 70},
+            {"p": "G#1", "t": 14.5, "d": 0.5, "v": 90},
+            {"p": "B1", "t": 15, "d": 1, "v": 85}
+          ]
+        },
+        {"bar": 16, "notes": [{"p": "A1", "t": 0, "d": 3, "v": 105}]}
+      ]
+    },
+    {
+      "name": "Vibes",
+      "instrument": "Vibraphone",
+      "volume": 0.45,
+      "pan": 0.3,
+      "humanize": {"timing_ms": 12, "velocity": 10},
+      "effects": ["vinyl_warmth", {"type": "delay", "time_beats": 0.75, "feedback": 0.25, "mix": 0.15}],
+      "clips": [
+        {
+          "bar": 8,
+          "repeat": 2,
+          "length_bars": 4,
+          "notes": [
+            {"p": "E5", "t": 0, "d": 0.75, "v": 85},
+            {"p": "G5", "t": 1, "d": 0.5, "v": 75},
+            {"p": "A5", "t": 1.5, "d": 1.25, "v": 90},
+            {"p": "G5", "t": 3, "d": 0.5, "v": 70},
+            {"p": "E5", "t": 3.5, "d": 0.5, "v": 75},
+            {"p": "D5", "t": 4.5, "d": 1, "v": 85},
+            {"p": "C5", "t": 5.5, "d": 0.5, "v": 75},
+            {"p": "A4", "t": 6, "d": 2, "v": 80},
+            {"p": "C5", "t": 12, "d": 0.5, "v": 75},
+            {"p": "D5", "t": 12.5, "d": 0.5, "v": 80},
+            {"p": "E5", "t": 13, "d": 1.5, "v": 90},
+            {"p": "B4", "t": 14.5, "d": 1.5, "v": 75}
+          ]
+        }
+      ]
+    }
+  ],
+  "reverb": {"type": "room"},
+  "loudness": "streaming"
+}

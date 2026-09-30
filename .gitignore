@@ -1,0 +1,15 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Downloaded at setup (large, third-party licenses) - see setup.ps1
+engines/
+libraries/
+soundfonts/*.sf2
+
+# Rendered songs (demos worth sharing go in demos/)
+output/
+
+# Logs
+*.log

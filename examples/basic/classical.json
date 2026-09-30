@@ -1,0 +1,150 @@
+{
+  "title": "Autumn Nocturne",
+  "bpm": 72,
+  "tail_seconds": 5,
+  "tracks": [
+    {
+      "name": "Violin I",
+      "instrument": "Violin",
+      "volume": 0.75,
+      "pan": -0.45,
+      "humanize": {"timing_ms": 15, "velocity": 8},
+      "effects": ["hall_reverb"],
+      "clips": [
+        {"bar": 0, "repeat": 2, "length_bars": 8, "notes": [
+          {"p": "A4", "t": 0, "d": 2, "v": 70}, {"p": "D5", "t": 2, "d": 1, "v": 74}, {"p": "E5", "t": 3, "d": 1, "v": 78},
+          {"p": "F5", "t": 4, "d": 3, "v": 84}, {"p": "E5", "t": 7, "d": 0.5, "v": 76}, {"p": "D5", "t": 7.5, "d": 0.5, "v": 72},
+          {"p": "D5", "t": 8, "d": 2, "v": 76}, {"p": "C5", "t": 10, "d": 1, "v": 72}, {"p": "A#4", "t": 11, "d": 1, "v": 70},
+          {"p": "A4", "t": 12, "d": 4, "v": 68},
+          {"p": "A4", "t": 16, "d": 1, "v": 74}, {"p": "D5", "t": 17, "d": 1, "v": 82}, {"p": "F5", "t": 18, "d": 1, "v": 90}, {"p": "A5", "t": 19, "d": 1, "v": 100},
+          {"p": "G5", "t": 20, "d": 2, "v": 102}, {"p": "F5", "t": 22, "d": 1, "v": 92}, {"p": "E5", "t": 23, "d": 1, "v": 86},
+          {"p": "D5", "t": 24, "d": 1, "v": 82}, {"p": "A#4", "t": 25, "d": 1, "v": 78}, {"p": "C#5", "t": 26, "d": 1, "v": 80}, {"p": "E5", "t": 27, "d": 1, "v": 82},
+          {"p": "D5", "t": 28, "d": 4, "v": 72}
+        ]},
+        {"bar": 16, "notes": [{"p": "D5", "t": 0, "d": 5, "v": 65}]}
+      ]
+    },
+    {
+      "name": "Flute",
+      "instrument": "Flute",
+      "volume": 0.4,
+      "pan": -0.15,
+      "humanize": {"timing_ms": 15, "velocity": 6},
+      "effects": ["hall_reverb"],
+      "clips": [
+        {"bar": 8, "length_bars": 8, "transpose": 12, "vel_scale": 0.85, "notes": [
+          {"p": "A4", "t": 0, "d": 2, "v": 70}, {"p": "D5", "t": 2, "d": 1, "v": 74}, {"p": "E5", "t": 3, "d": 1, "v": 78},
+          {"p": "F5", "t": 4, "d": 3, "v": 84}, {"p": "E5", "t": 7, "d": 0.5, "v": 76}, {"p": "D5", "t": 7.5, "d": 0.5, "v": 72},
+          {"p": "D5", "t": 8, "d": 2, "v": 76}, {"p": "C5", "t": 10, "d": 1, "v": 72}, {"p": "A#4", "t": 11, "d": 1, "v": 70},
+          {"p": "A4", "t": 12, "d": 4, "v": 68},
+          {"p": "A4", "t": 16, "d": 1, "v": 74}, {"p": "D5", "t": 17, "d": 1, "v": 82}, {"p": "F5", "t": 18, "d": 1, "v": 90}, {"p": "A5", "t": 19, "d": 1, "v": 100},
+          {"p": "G5", "t": 20, "d": 2, "v": 102}, {"p": "F5", "t": 22, "d": 1, "v": 92}, {"p": "E5", "t": 23, "d": 1, "v": 86},
+          {"p": "D5", "t": 24, "d": 1, "v": 82}, {"p": "A#4", "t": 25, "d": 1, "v": 78}, {"p": "C#5", "t": 26, "d": 1, "v": 80}, {"p": "E5", "t": 27, "d": 1, "v": 82},
+          {"p": "D5", "t": 28, "d": 4, "v": 72}
+        ]}
+      ]
+    },
+    {
+      "name": "Inner Strings",
+      "instrument": "String Ensemble 1",
+      "volume": 0.9,
+      "pan": -0.1,
+      "humanize": {"timing_ms": 15, "velocity": 6},
+      "effects": ["hall_reverb"],
+      "clips": [
+        {"bar": 0, "repeat": 2, "length_bars": 8, "notes": [
+          {"p": ["F3", "A3"], "t": 0, "d": 4, "v": 62},
+          {"p": ["F3", "D4"], "t": 4, "d": 4, "v": 66},
+          {"p": ["G3", "A#3"], "t": 8, "d": 4, "v": 64},
+          {"p": ["G3", "C#4"], "t": 12, "d": 4, "v": 64},
+          {"p": ["F3", "A3"], "t": 16, "d": 4, "v": 70},
+          {"p": ["A3", "C4"], "t": 20, "d": 4, "v": 80},
+          {"p": ["G3", "A#3"], "t": 24, "d": 2, "v": 72}, {"p": ["G3", "C#4"], "t": 26, "d": 2, "v": 72},
+          {"p": ["F3", "A3"], "t": 28, "d": 4, "v": 64}
+        ]},
+        {"bar": 16, "notes": [{"p": ["F3", "A3"], "t": 0, "d": 5, "v": 60}]}
+      ]
+    },
+    {
+      "name": "Cello",
+      "instrument": "Cello",
+      "volume": 0.65,
+      "pan": 0.35,
+      "transpose": 12,
+      "humanize": {"timing_ms": 15, "velocity": 6},
+      "effects": ["hall_reverb"],
+      "clips": [
+        {"bar": 0, "repeat": 2, "length_bars": 8, "notes": [
+          {"p": "D2", "t": 0, "d": 4, "v": 72}, {"p": "A#1", "t": 4, "d": 4, "v": 74}, {"p": "G1", "t": 8, "d": 4, "v": 72},
+          {"p": "A1", "t": 12, "d": 4, "v": 72}, {"p": "D2", "t": 16, "d": 4, "v": 78}, {"p": "F1", "t": 20, "d": 4, "v": 86},
+          {"p": "G1", "t": 24, "d": 2, "v": 80}, {"p": "A1", "t": 26, "d": 2, "v": 80}, {"p": "D2", "t": 28, "d": 4, "v": 72}
+        ]},
+        {"bar": 16, "notes": [{"p": "D2", "t": 0, "d": 5, "v": 68}]}
+      ]
+    },
+    {
+      "name": "Contrabass",
+      "instrument": "Contrabass",
+      "volume": 0.7,
+      "pan": 0.5,
+      "humanize": {"timing_ms": 15, "velocity": 6},
+      "effects": ["hall_reverb"],
+      "clips": [
+        {"bar": 8, "length_bars": 8, "notes": [
+          {"p": "D2", "t": 0, "d": 4, "v": 72}, {"p": "A#1", "t": 4, "d": 4, "v": 74}, {"p": "G1", "t": 8, "d": 4, "v": 72},
+          {"p": "A1", "t": 12, "d": 4, "v": 72}, {"p": "D2", "t": 16, "d": 4, "v": 78}, {"p": "F1", "t": 20, "d": 4, "v": 86},
+          {"p": "G1", "t": 24, "d": 2, "v": 80}, {"p": "A1", "t": 26, "d": 2, "v": 80}, {"p": "D2", "t": 28, "d": 4, "v": 72}
+        ]},
+        {"bar": 16, "notes": [{"p": "D2", "t": 0, "d": 5, "v": 68}]}
+      ]
+    },
+    {
+      "name": "Horns",
+      "instrument": "French Horn",
+      "volume": 0.8,
+      "pan": 0.15,
+      "humanize": {"timing_ms": 15, "velocity": 6},
+      "effects": ["hall_reverb"],
+      "clips": [
+        {"bar": 8, "length_bars": 8, "vel_scale": 0.9, "notes": [
+          {"p": ["F3", "A3"], "t": 0, "d": 4, "v": 62},
+          {"p": ["F3", "D4"], "t": 4, "d": 4, "v": 66},
+          {"p": ["G3", "A#3"], "t": 8, "d": 4, "v": 64},
+          {"p": ["G3", "C#4"], "t": 12, "d": 4, "v": 64},
+          {"p": ["F3", "A3"], "t": 16, "d": 4, "v": 70},
+          {"p": ["A3", "C4"], "t": 20, "d": 4, "v": 84},
+          {"p": ["G3", "A#3"], "t": 24, "d": 2, "v": 76}, {"p": ["G3", "C#4"], "t": 26, "d": 2, "v": 76},
+          {"p": ["F3", "A3"], "t": 28, "d": 4, "v": 64}
+        ]}
+      ]
+    },
+    {
+      "name": "Harp",
+      "instrument": "Orchestral Harp",
+      "volume": 0.6,
+      "pan": 0.25,
+      "strum_ms": 110,
+      "humanize": {"timing_ms": 8, "velocity": 6},
+      "effects": ["hall_reverb"],
+      "clips": [
+        {"bar": 8, "length_bars": 8, "every": 2, "d": 2, "v": 70, "chords": [
+          {"chord": "Dm", "oct": 3}, {"chord": "Dm", "oct": 4}, {"chord": "A#", "oct": 2}, {"chord": "A#", "oct": 3},
+          {"chord": "Gm", "oct": 3}, {"chord": "Gm", "oct": 4}, {"chord": "A7", "oct": 2}, {"chord": "A7", "oct": 3},
+          {"chord": "Dm", "oct": 3}, {"chord": "Dm", "oct": 4}, {"chord": "F", "oct": 3}, {"chord": "F", "oct": 4},
+          {"chord": "Gm", "oct": 3}, {"chord": "A7", "oct": 3}, {"chord": "Dm", "oct": 3}, {"chord": "Dm", "oct": 4}
+        ]},
+        {"bar": 16, "notes": [{"chord": "Dm", "oct": 3, "t": 0, "d": 5, "v": 70}, {"chord": "Dm", "oct": 4, "t": 0.4, "d": 5, "v": 65}]}
+      ]
+    },
+    {
+      "name": "Timpani",
+      "instrument": "Timpani",
+      "volume": 0.6,
+      "effects": ["hall_reverb"],
+      "clips": [
+        {"bar": 15, "beat": 2, "step": 0.125, "pattern": {"A2": "ggggoooooooxxxxX"}},
+        {"bar": 16, "notes": [{"p": "D3", "t": 0, "d": 3, "v": 110}]}
+      ]
+    }
+  ]
+}

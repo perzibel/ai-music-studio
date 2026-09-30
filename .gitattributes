@@ -1,0 +1,6 @@
+* text=auto
+*.mp3 binary
+*.wav binary
+*.flac binary
+*.sf2 binary
+*.nam binary

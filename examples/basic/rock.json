@@ -1,0 +1,109 @@
+{
+  "title": "Open Road",
+  "bpm": 124,
+  "tracks": [
+    {
+      "name": "Drums",
+      "instrument": "drums",
+      "kit": "Room",
+      "volume": 0.9,
+      "humanize": {"timing_ms": 6, "velocity": 8},
+      "effects": ["drum_bus", "room_reverb"],
+      "clips": [
+        {"bar": 3, "pattern": {"snare": "........o.o.xxXX", "kick": "x..............."}},
+        {"bar": 4, "repeat": 7, "length_bars": 1, "pattern": {
+          "kick":  "x.......x.x.....",
+          "snare": "....x.......x...",
+          "hihat": "x.o.x.o.x.o.x.o."
+        }},
+        {"bar": 11, "pattern": {
+          "kick":      "x.......x.......",
+          "snare":     "....x.......xxxx",
+          "hihat":     "x.o.x.o.x.......",
+          "tom_high":  "..........xx....",
+          "tom_floor": "............xx.."
+        }},
+        {"bar": 12, "repeat": 8, "length_bars": 1, "pattern": {
+          "kick":       "x.....x.x.x.....",
+          "snare":      "....x.......x...",
+          "ride":       "x.x.x.x.x.x.x.x.",
+          "hihat_open": "..............x."
+        }},
+        {"bar": 12, "repeat": 2, "length_bars": 4, "notes": [{"p": "crash", "t": 0, "v": 115}]},
+        {"bar": 19, "beat": 2, "pattern": {"snare": "xxxxxxxX", "tom_floor": "......xx"}},
+        {"bar": 20, "notes": [{"p": "kick", "t": 0, "v": 120}, {"p": "crash", "t": 0, "v": 120}, {"p": "crash2", "t": 0, "v": 110}]}
+      ]
+    },
+    {
+      "name": "Clean Guitar",
+      "instrument": "Electric Guitar (clean)",
+      "volume": 0.8,
+      "pan": 0.35,
+      "humanize": {"timing_ms": 8, "velocity": 8},
+      "effects": ["clean_guitar"],
+      "clips": [
+        {"bar": 0, "repeat": 3, "length_bars": 4, "notes": [
+          {"p": "G2", "t": 0, "d": 0.5}, {"p": "D3", "t": 0.5, "d": 0.5}, {"p": "G3", "t": 1, "d": 0.5}, {"p": "B3", "t": 1.5, "d": 0.5},
+          {"p": "D4", "t": 2, "d": 0.5}, {"p": "B3", "t": 2.5, "d": 0.5}, {"p": "G3", "t": 3, "d": 0.5}, {"p": "D3", "t": 3.5, "d": 0.5},
+          {"p": "D3", "t": 4, "d": 0.5}, {"p": "A3", "t": 4.5, "d": 0.5}, {"p": "D4", "t": 5, "d": 0.5}, {"p": "F#4", "t": 5.5, "d": 0.5},
+          {"p": "A4", "t": 6, "d": 0.5}, {"p": "F#4", "t": 6.5, "d": 0.5}, {"p": "D4", "t": 7, "d": 0.5}, {"p": "A3", "t": 7.5, "d": 0.5},
+          {"p": "E2", "t": 8, "d": 0.5}, {"p": "B2", "t": 8.5, "d": 0.5}, {"p": "E3", "t": 9, "d": 0.5}, {"p": "G3", "t": 9.5, "d": 0.5},
+          {"p": "B3", "t": 10, "d": 0.5}, {"p": "G3", "t": 10.5, "d": 0.5}, {"p": "E3", "t": 11, "d": 0.5}, {"p": "B2", "t": 11.5, "d": 0.5},
+          {"p": "C3", "t": 12, "d": 0.5}, {"p": "G3", "t": 12.5, "d": 0.5}, {"p": "C4", "t": 13, "d": 0.5}, {"p": "E4", "t": 13.5, "d": 0.5},
+          {"p": "G4", "t": 14, "d": 0.5}, {"p": "E4", "t": 14.5, "d": 0.5}, {"p": "C4", "t": 15, "d": 0.5}, {"p": "G3", "t": 15.5, "d": 0.5}
+        ]}
+      ]
+    },
+    {
+      "name": "Drive Guitar",
+      "instrument": "Overdriven Guitar",
+      "volume": 0.6,
+      "double_track": true,
+      "strum_ms": 6,
+      "humanize": {"timing_ms": 8, "velocity": 8},
+      "effects": ["rock_amp"],
+      "clips": [
+        {"bar": 12, "repeat": 2, "length_bars": 4, "every": 0.5, "d": 0.45, "v": 100, "chords": [
+          {"chord": "G5", "oct": 2}, {"chord": "G5", "oct": 2}, {"chord": "G5", "oct": 2}, {"chord": "G5", "oct": 2},
+          {"chord": "G5", "oct": 2}, {"chord": "G5", "oct": 2}, {"chord": "G5", "oct": 2}, {"chord": "G5", "oct": 2},
+          {"chord": "D5", "oct": 3}, {"chord": "D5", "oct": 3}, {"chord": "D5", "oct": 3}, {"chord": "D5", "oct": 3},
+          {"chord": "D5", "oct": 3}, {"chord": "D5", "oct": 3}, {"chord": "D5", "oct": 3}, {"chord": "D5", "oct": 3},
+          {"chord": "E5", "oct": 2}, {"chord": "E5", "oct": 2}, {"chord": "E5", "oct": 2}, {"chord": "E5", "oct": 2},
+          {"chord": "E5", "oct": 2}, {"chord": "E5", "oct": 2}, {"chord": "E5", "oct": 2}, {"chord": "E5", "oct": 2},
+          {"chord": "C5", "oct": 3}, {"chord": "C5", "oct": 3}, {"chord": "C5", "oct": 3}, {"chord": "C5", "oct": 3},
+          {"chord": "C5", "oct": 3}, {"chord": "C5", "oct": 3}, {"chord": "D5", "oct": 3}, {"chord": "D5", "oct": 3}
+        ]},
+        {"bar": 20, "notes": [{"chord": "G5", "oct": 2, "t": 0, "d": 4, "v": 120}]}
+      ]
+    },
+    {
+      "name": "Bass",
+      "instrument": "Electric Bass (pick)",
+      "volume": 0.9,
+      "humanize": {"timing_ms": 5, "velocity": 6},
+      "effects": ["bass_amp"],
+      "clips": [
+        {"bar": 4, "repeat": 4, "length_bars": 4, "step": 0.5, "pattern": {
+          "G1": "xoxoxoxo........................",
+          "D2": "........xoxoxoxo................",
+          "E1": "................xoxoxoxo........",
+          "C2": "........................xoxoxoxo"
+        }},
+        {"bar": 20, "notes": [{"p": "G1", "t": 0, "d": 4, "v": 115}]}
+      ]
+    },
+    {
+      "name": "Organ",
+      "instrument": "Rock Organ",
+      "volume": 0.65,
+      "pan": -0.35,
+      "effects": [{"type": "chorus", "mix": 0.3}, "room_reverb"],
+      "clips": [
+        {"bar": 12, "repeat": 2, "length_bars": 4, "every": 4, "oct": 3, "v": 80, "chords": [
+          "G", {"chord": "D", "oct": 3, "inv": 1}, {"chord": "Em", "oct": 3, "inv": 1}, {"chord": "C", "oct": 3, "inv": 1}
+        ]},
+        {"bar": 20, "chords": ["G"], "every": 4, "oct": 3, "v": 80}
+      ]
+    }
+  ]
+}

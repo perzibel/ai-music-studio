@@ -1,0 +1,283 @@
+{
+  "title": "Iron Tide",
+  "bpm": 140,
+  "tracks": [
+    {
+      "name": "Drums",
+      "instrument": "sfz:acoustic_drums",
+      "volume": 1.0,
+      "humanize": {"timing_ms": 4, "velocity": 6},
+      "effects": ["drum_bus"],
+      "clips": [
+        {
+          "bar": 0,
+          "repeat": 3,
+          "length_bars": 1,
+          "pattern": {"kick": "x...............", "crash": "x..............."}
+        },
+        {
+          "bar": 3,
+          "pattern": {
+            "kick": "x...............",
+            "crash": "x...............",
+            "snare": "........xxxx....",
+            "tom_high": "............xx..",
+            "tom_floor": "..............xX"
+          }
+        },
+        {
+          "bar": 4,
+          "repeat": 4,
+          "length_bars": 2,
+          "pattern": {
+            "kick": "xxxxxxx.xxxxx... xxxxxxx.xxxxx...",
+            "snare": "....x.......x... ....x.......x...",
+            "china": "............x... ............x...",
+            "crash": "x............... ................"
+          }
+        },
+        {
+          "bar": 11,
+          "beat": 2,
+          "notes": [
+            {"p": "tom_high", "t": 0, "d": 0.25, "v": 100},
+            {"p": "tom_high", "t": 0.25, "d": 0.25, "v": 90},
+            {"p": "tom_mid", "t": 0.5, "d": 0.25, "v": 100},
+            {"p": "tom_mid", "t": 0.75, "d": 0.25, "v": 90},
+            {"p": "tom_low", "t": 1, "d": 0.25, "v": 105},
+            {"p": "tom_low", "t": 1.25, "d": 0.25, "v": 95},
+            {"p": "tom_floor", "t": 1.5, "d": 0.25, "v": 110},
+            {"p": "tom_floor", "t": 1.75, "d": 0.25, "v": 120}
+          ]
+        },
+        {
+          "bar": 12,
+          "repeat": 8,
+          "length_bars": 1,
+          "pattern": {"kick": "x.....x.x.....x.", "snare": "........x.......", "ride": "x.x.x.x.x.x.x.x."}
+        },
+        {
+          "bar": 12,
+          "repeat": 2,
+          "length_bars": 4,
+          "notes": [{"p": "crash", "t": 0, "v": 110}, {"p": "china", "t": 8, "v": 90}]
+        },
+        {
+          "bar": 20,
+          "repeat": 2,
+          "length_bars": 2,
+          "pattern": {
+            "kick": "xxxxxxx.xxxxx... xxxxxxx.xxxxx...",
+            "snare": "....x.......x... ....x.......x...",
+            "china": "............x... ............x...",
+            "crash": "x............... ................"
+          }
+        },
+        {
+          "bar": 24,
+          "notes": [
+            {"p": "kick", "t": 0, "v": 127},
+            {"p": "crash", "t": 0, "v": 127},
+            {"p": "china", "t": 0, "v": 110}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chug Guitar",
+      "instrument": "sfz:electric_guitar_mute",
+      "amp": "metal",
+      "volume": 0.5,
+      "double_track": true,
+      "humanize": {"timing_ms": 6, "velocity": 8},
+      "clips": [
+        {
+          "bar": 4,
+          "repeat": 4,
+          "length_bars": 2,
+          "pattern": {"E2": "Xxxxxx..Xxxx.... Xxxxxx..Xxxx....", "B2": "Xxxxxx..Xxxx.... Xxxxxx..Xxxx...."}
+        },
+        {
+          "bar": 20,
+          "repeat": 2,
+          "length_bars": 2,
+          "pattern": {"E2": "Xxxxxx..Xxxx.... Xxxxxx..Xxxx....", "B2": "Xxxxxx..Xxxx.... Xxxxxx..Xxxx...."}
+        }
+      ]
+    },
+    {
+      "name": "Power Chords",
+      "instrument": "sfz:electric_guitar",
+      "amp": "metal",
+      "volume": 0.8,
+      "double_track": true,
+      "humanize": {"timing_ms": 6, "velocity": 6},
+      "clips": [
+        {
+          "bar": 0,
+          "notes": [
+            {"chord": "E5", "oct": 2, "t": 0, "d": 4, "v": 110},
+            {"chord": "F5", "oct": 2, "t": 4, "d": 4, "v": 110},
+            {"chord": "G5", "oct": 2, "t": 8, "d": 4, "v": 110},
+            {"chord": "F5", "oct": 2, "t": 12, "d": 2, "v": 110}
+          ]
+        },
+        {
+          "bar": 4,
+          "repeat": 4,
+          "length_bars": 2,
+          "notes": [
+            {"chord": "F5", "oct": 2, "t": 1.5, "d": 0.5, "v": 115},
+            {"chord": "G5", "oct": 2, "t": 3, "d": 1, "v": 120},
+            {"chord": "F5", "oct": 2, "t": 5.5, "d": 0.5, "v": 115},
+            {"chord": "A#5", "oct": 2, "t": 7, "d": 1, "v": 120}
+          ]
+        },
+        {
+          "bar": 12,
+          "repeat": 2,
+          "length_bars": 4,
+          "every": 4,
+          "d": 3.9,
+          "v": 110,
+          "chords": [
+            {"chord": "E5", "oct": 2},
+            {"chord": "C5", "oct": 3},
+            {"chord": "D5", "oct": 2},
+            {"chord": "B5", "oct": 2}
+          ]
+        },
+        {
+          "bar": 20,
+          "repeat": 2,
+          "length_bars": 2,
+          "notes": [
+            {"chord": "F5", "oct": 2, "t": 1.5, "d": 0.5, "v": 115},
+            {"chord": "G5", "oct": 2, "t": 3, "d": 1, "v": 120},
+            {"chord": "F5", "oct": 2, "t": 5.5, "d": 0.5, "v": 115},
+            {"chord": "A#5", "oct": 2, "t": 7, "d": 1, "v": 120}
+          ]
+        },
+        {"bar": 24, "notes": [{"chord": "E5", "oct": 2, "t": 0, "d": 4, "v": 127}]}
+      ]
+    },
+    {
+      "name": "Bass",
+      "instrument": "sfz:bass_guitar",
+      "amp": "bass_grit",
+      "volume": 1.0,
+      "clips": [
+        {
+          "bar": 0,
+          "notes": [
+            {"p": "E1", "t": 0, "d": 4, "v": 110},
+            {"p": "F1", "t": 4, "d": 4, "v": 110},
+            {"p": "G1", "t": 8, "d": 4, "v": 110},
+            {"p": "F1", "t": 12, "d": 2, "v": 110}
+          ]
+        },
+        {
+          "bar": 4,
+          "repeat": 4,
+          "length_bars": 2,
+          "pattern": {"E1": "Xxxxxx..Xxxx.... Xxxxxx..Xxxx...."},
+          "notes": [
+            {"p": "F1", "t": 1.5, "d": 0.5, "v": 115},
+            {"p": "G1", "t": 3, "d": 1, "v": 120},
+            {"p": "F1", "t": 5.5, "d": 0.5, "v": 115},
+            {"p": "A#1", "t": 7, "d": 1, "v": 120}
+          ]
+        },
+        {
+          "bar": 12,
+          "repeat": 2,
+          "length_bars": 4,
+          "notes": [
+            {"p": "E1", "t": 0, "d": 3.9, "v": 110},
+            {"p": "C2", "t": 4, "d": 3.9, "v": 110},
+            {"p": "D2", "t": 8, "d": 3.9, "v": 110},
+            {"p": "B1", "t": 12, "d": 3.9, "v": 110}
+          ]
+        },
+        {
+          "bar": 20,
+          "repeat": 2,
+          "length_bars": 2,
+          "pattern": {"E1": "Xxxxxx..Xxxx.... Xxxxxx..Xxxx...."},
+          "notes": [
+            {"p": "F1", "t": 1.5, "d": 0.5, "v": 115},
+            {"p": "G1", "t": 3, "d": 1, "v": 120},
+            {"p": "F1", "t": 5.5, "d": 0.5, "v": 115},
+            {"p": "A#1", "t": 7, "d": 1, "v": 120}
+          ]
+        },
+        {"bar": 24, "notes": [{"p": "E1", "t": 0, "d": 4, "v": 120}]}
+      ]
+    },
+    {
+      "name": "Lead",
+      "instrument": "sfz:electric_guitar",
+      "amp": "metal",
+      "volume": 1.4,
+      "pan": 0.1,
+      "humanize": {"timing_ms": 8, "velocity": 6},
+      "effects": [{"type": "delay", "time_beats": 0.75, "feedback": 0.3, "mix": 0.18}],
+      "clips": [
+        {
+          "bar": 12,
+          "length_bars": 4,
+          "notes": [
+            {"p": "E4", "t": 0, "d": 2, "v": 110, "vib": 0.3},
+            {"p": "G4", "t": 2, "d": 1, "v": 105},
+            {"p": "B4", "t": 3, "d": 1, "v": 110},
+            {"p": "C5", "t": 4, "d": 3, "v": 115, "vib": 0.3},
+            {"p": "B4", "t": 7, "d": 0.5, "v": 100},
+            {"p": "A4", "t": 7.5, "d": 0.5, "v": 100},
+            {"p": "D5", "t": 8, "d": 2, "v": 115, "vib": 0.3},
+            {"p": "A4", "t": 10, "d": 1, "v": 105},
+            {"p": "F#4", "t": 11, "d": 1, "v": 105},
+            {
+              "p": "B4",
+              "t": 12,
+              "d": 3.75,
+              "v": 115,
+              "vib": 0.3,
+              "bend": 1,
+              "bend_at": 0.15,
+              "bend_time": 0.15
+            }
+          ]
+        },
+        {
+          "bar": 16,
+          "length_bars": 4,
+          "transpose": 12,
+          "notes": [
+            {"p": "E4", "t": 0, "d": 2, "v": 110, "vib": 0.3},
+            {"p": "G4", "t": 2, "d": 1, "v": 105},
+            {"p": "B4", "t": 3, "d": 1, "v": 110},
+            {"p": "C5", "t": 4, "d": 3, "v": 115, "vib": 0.3},
+            {"p": "B4", "t": 7, "d": 0.5, "v": 100},
+            {"p": "A4", "t": 7.5, "d": 0.5, "v": 100},
+            {"p": "D5", "t": 8, "d": 2, "v": 115, "vib": 0.3},
+            {"p": "A4", "t": 10, "d": 1, "v": 105},
+            {"p": "F#4", "t": 11, "d": 1, "v": 105},
+            {
+              "p": "B4",
+              "t": 12,
+              "d": 3.75,
+              "v": 115,
+              "vib": 0.3,
+              "bend": 1,
+              "bend_at": 0.15,
+              "bend_time": 0.15
+            }
+          ]
+        }
+      ],
+      "reverb_send": 0.25
+    }
+  ],
+  "reverb": {"type": "room"},
+  "loudness": "loud"
+}
