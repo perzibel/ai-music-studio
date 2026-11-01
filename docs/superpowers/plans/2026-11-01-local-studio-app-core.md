@@ -4,7 +4,7 @@
 
 **Goal:** Ship a local web app that makes a finished song from a typed idea, with free-text Lyrics (AI-assisted on a four-level dial) and free-text Instructions (picker-assisted), shows every past take for that song, and runs entirely offline on this machine's 8 GB GPU.
 
-**Architecture:** A small FastAPI server (`webapp/`) sits beside the existing `studio/` package and reuses it directly (`studio.generate`, `studio.render.OUTPUT_DIR`, `studio.lyrics_check`) rather than duplicating it. The server serves a static single-page UI and a small JSON API; a single-worker background job queue runs ACE-Step generations so HTTP requests never block on GPU work. Ollama (already installed, local) backs the Lyrics-assist dial. Implement on a new branch off `main` (not `docs/local-studio-app-design`, which only carries the design doc).
+**Architecture:** A small FastAPI server (`webapp/`) sits beside the existing `studio/` package and reuses it directly (`studio.generate`, `studio.render.OUTPUT_DIR`, `studio.lyrics_check`) rather than duplicating it. The server serves a static single-page UI and a small JSON API; a single-worker background job queue runs ACE-Step generations so HTTP requests never block on GPU work. Ollama (already installed, local) backs the Lyrics-assist dial. This app is additive: the existing `AI Music Studio.cmd` (ACE-Step's own 🎛️ V1.5 Playground, Gradio, port 7860) stays exactly as it is today, as a separate path the user can keep using directly; the new app runs on its own port (7861) under its own launcher so the two never conflict. Implement on a new branch off `main` (not `docs/local-studio-app-design`, which only carries the design doc).
 
 **Tech Stack:** Python 3.12, FastAPI + Uvicorn, pytest, Playwright (already installed) for one UI smoke test, plain HTML/CSS/JS for the frontend (no build step), Ollama HTTP API for lyrics assist.
 
@@ -14,6 +14,7 @@ This plan implements only the parts of that spec provable with the one generatio
 
 ## Global Constraints
 
+- The existing `AI Music Studio.cmd` launcher (ACE-Step's own 🎛️ V1.5 Playground, Gradio, port 7860) must keep working exactly as it does today. Nothing in this plan edits, removes, or repurposes that file or its port; the new app is a second, independent path, not a replacement.
 - ACE-Step generation must run with `--offload` from the first attempt on this 8 GB GPU, not only as a fallback after an out-of-memory error — a bare attempt without it was observed to hang 30+ minutes with no error and no feedback (spec anti-goals).
 - No paid or cloud services. Ollama, `faster-whisper`, yt-dlp, and ffmpeg (all already installed locally) are the only AI helpers this plan may call.
 - Every screen shows every control for making a song at once; no multi-step wizard, no Back/Next flow (spec anti-goals).
@@ -589,9 +590,9 @@ git commit -m "feat: add studio UI wired to the local API"
 **Interfaces:**
 - Consumes: `webapp.app:app` (Task 6/7).
 
-- [ ] **Step 1: Write the launcher**, following the existing `AI Music Studio.cmd` pattern (activate the project's `.venv`, `cd` into the repo), running `uvicorn webapp.app:app --port 7861` and then opening `http://127.0.0.1:7861` in the default browser once the port responds.
+- [ ] **Step 1: Write the launcher** as a new file, leaving the existing `AI Music Studio.cmd` untouched. Follow its pattern (activate the project's `.venv`, `cd` into the repo), running `uvicorn webapp.app:app --port 7861` and then opening `http://127.0.0.1:7861` in the default browser once the port responds. Port 7861 is deliberately different from the Playground's 7860 so both can run at the same time.
 
-- [ ] **Step 2: Manual verification.** Double-click the `.cmd` file; confirm the page loads at `http://127.0.0.1:7861`, "Make the song" with a typed idea produces a playable take within the file's "Already made for this song" list, and closing the window stops the Uvicorn process.
+- [ ] **Step 2: Manual verification.** With `AI Music Studio.cmd` already running (or not — either way), double-click the new `.cmd` file; confirm the page loads at `http://127.0.0.1:7861` without any port conflict, "Make the song" with a typed idea produces a playable take within the file's "Already made for this song" list, and closing the window stops only the new app's Uvicorn process, leaving the Playground (if running) unaffected.
 
 - [ ] **Step 3: Commit** (the `.cmd` file lives on the Desktop, outside the repo, so this step applies to any repo-side notes only — e.g. mentioning the launcher in `README.md` if the project's README already documents the existing `AI Music Studio.cmd`).
 
