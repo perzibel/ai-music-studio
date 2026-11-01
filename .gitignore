@@ -13,3 +13,4 @@ output/
 
 # Logs
 *.log
+.superpowers/
