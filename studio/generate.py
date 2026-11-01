@@ -23,7 +23,7 @@ def _slug(text: str) -> str:
 
 def generate(prompt: str, lyrics: str = "", name: str | None = None, duration: float = 120,
              bpm: int | None = None, key: str = "", language: str = "en", takes: int = 1, seed: int = -1,
-             quality: str = "high", loudness: str = "streaming") -> dict:
+             quality: str = "high", loudness: str = "streaming", offload: bool = True) -> dict:
     from . import render
     from .mix import master
     if quality not in QUALITY:
@@ -43,7 +43,7 @@ def generate(prompt: str, lyrics: str = "", name: str | None = None, duration: f
         args = ["--task", "text2music", "--model", MODEL, "--out-dir", str(work), "--caption", prompt,
                 "--lyrics", lyrics, "--language", language if lyrics else "unknown",
                 "--duration", str(duration), "--seed", str(seed + t if seed >= 0 else -1),
-                "--steps", str(preset["steps"]), *low_vram_args()]
+                "--steps", str(preset["steps"]), *low_vram_args(), *(["--offload"] if offload else [])]
         if bpm:
             args += ["--bpm", str(int(bpm))]
         if key:
