@@ -1,0 +1,97 @@
+/* Dark studio look, adapted from the approved mockup
+   (.superpowers/brainstorm/2095-1793519839/content/studio-v3.html). */
+:root {
+  --bg: #15130f;
+  --panel: #1c1a15;
+  --line: #33302a;
+  --text: #ece7dc;
+  --dim: #aba594;
+  --amber: #e8a33d;
+  --amber-dim: #e8a33d33;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  margin: 0;
+  padding: 22px;
+}
+
+.st-wrap { max-width: 960px; margin: 0 auto; }
+
+.st-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--line);
+}
+.st-song-name { font-size: 1.1rem; font-weight: 650; background: none; border: none; color: var(--text); }
+.st-ai-badge {
+  display: inline-flex; align-items: center; gap: 6px; font-size: .72rem;
+  font-family: "Cascadia Code", monospace; color: var(--amber); background: var(--amber-dim);
+  border: 1px solid #e8a33d55; border-radius: 999px; padding: 3px 10px; margin-left: 10px;
+}
+.st-versions { font-size: .82rem; color: var(--dim); font-family: "Cascadia Code", monospace; }
+.st-song-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.st-song-filter {
+  background: #121009; border: 1px solid var(--line); border-radius: 7px; color: var(--text);
+  padding: 6px 10px; font-size: .85rem;
+}
+
+.st-section { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; }
+.st-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.st-section-title { font-size: .78rem; font-weight: 650; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); }
+.st-ai-hint { font-size: .78rem; color: var(--amber); opacity: .9; }
+.st-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.st-effort { display: flex; align-items: center; gap: 0; margin: 4px 0 14px; position: relative; }
+.st-effort-track { position: absolute; top: 6px; left: 0; right: 0; height: 2px; background: var(--line); z-index: 1; }
+.st-effort-stop { flex: 1; text-align: center; position: relative; cursor: pointer; z-index: 2; }
+.st-effort-stop .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--line); border: 2px solid var(--line); margin: 0 auto 6px; }
+.st-effort-stop.filled .dot { background: var(--amber); border-color: var(--amber); }
+.st-effort-stop .label { font-size: .76rem; color: var(--dim); }
+.st-effort-stop.active .label { color: var(--amber); font-weight: 600; }
+
+.st-textarea {
+  width: 100%; background: #121009; border: 1px solid var(--line); border-radius: 9px; color: var(--text);
+  font-size: .92rem; padding: 12px 14px; min-height: 64px; font-family: inherit; resize: vertical; box-sizing: border-box;
+}
+.st-textarea::placeholder { color: #8a8375; }
+
+.st-pill {
+  border: 1px solid var(--line); border-radius: 9px; padding: 8px 13px; font-size: .88rem; cursor: pointer;
+  display: flex; align-items: center; gap: 7px; background: none; color: var(--text);
+}
+.st-pill:hover { border-color: var(--amber); }
+.st-pill.selected { border-color: var(--amber); background: var(--amber-dim); }
+.st-pill .st-play { font-size: .7rem; color: var(--dim); border-left: 1px solid var(--line); padding-left: 7px; margin-left: 1px; }
+.st-pill.selected .st-play { color: var(--amber); }
+.st-pill[disabled] { opacity: .45; cursor: not-allowed; }
+.st-pickrow-label { font-size: .72rem; color: var(--dim); margin: 10px 0 6px; letter-spacing: .03em; }
+
+.st-take {
+  border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; display: flex; align-items: center;
+  gap: 10px; flex: 1; min-width: 220px;
+}
+.st-take audio { flex: 1; height: 28px; }
+.st-take-meta { font-size: .74rem; color: var(--dim); white-space: nowrap; }
+
+.st-output-row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+.st-stepper { display: flex; align-items: center; gap: 8px; font-size: .9rem; }
+.st-stepper button { width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--line); background: none; color: var(--text); cursor: pointer; }
+.st-checkline { display: flex; align-items: center; gap: 8px; font-size: .88rem; }
+.st-checkline input { width: 17px; height: 17px; accent-color: var(--amber); }
+.st-more-toggle { font-size: .8rem; color: var(--dim); cursor: pointer; margin-left: auto; background: none; border: none; }
+.st-more-fields { display: none; gap: 10px; margin-top: 10px; }
+.st-more-fields.open { display: flex; }
+.st-more-fields input {
+  background: #121009; border: 1px solid var(--line); border-radius: 7px; color: var(--text); padding: 6px 10px; width: 90px;
+}
+
+.st-bottombar { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+.st-make-btn { background: var(--amber); color: #1a1409; border: none; border-radius: 10px; padding: 13px 26px; font-size: 1rem; font-weight: 650; cursor: pointer; }
+.st-make-btn[disabled] { opacity: .6; cursor: not-allowed; }
+.st-folder-link { font-size: .8rem; color: var(--dim); text-decoration: underline; cursor: pointer; background: none; border: none; }
+
+.st-job-status { margin-top: 10px; font-size: .85rem; color: var(--dim); }
+.st-job-status.error { color: #e85c3d; }
+.st-job-status.done { color: var(--amber); }

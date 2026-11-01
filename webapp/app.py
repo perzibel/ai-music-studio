@@ -92,6 +92,14 @@ def get_preview(genre: str):
     return FileResponse(path)
 
 
+@app.get("/api/songs/{name}/takes/{index}")
+def get_take_audio(name: str, index: int):
+    takes = songs.list_takes(name)
+    if index < 0 or index >= len(takes):
+        return JSONResponse({"error": f"No take {index} for song {name}"}, status_code=404)
+    return FileResponse(takes[index]["mp3"])
+
+
 @app.post("/api/open-folder")
 def post_open_folder(body: OpenFolderRequest) -> dict:
     os.startfile(OUTPUT_DIR / body.name)  # Windows-only, matching this project's platform

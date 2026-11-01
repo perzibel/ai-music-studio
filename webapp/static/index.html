@@ -1,6 +1,103 @@
-<!-- Placeholder for Task 6 so StaticFiles has a directory to mount; Task 7 replaces this with the real studio UI. -->
 <!DOCTYPE html>
 <html>
-<head><title>AI Music Studio</title></head>
-<body>Studio UI coming in Task 7.</body>
+<head>
+  <meta charset="utf-8">
+  <title>AI Music Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="st-wrap">
+    <div class="st-topbar">
+      <div>
+        <span id="song-name" class="st-song-name">New Song</span>
+        <span class="st-ai-badge">✦ AI co-producer ready</span>
+      </div>
+      <div id="song-versions" class="st-versions">0 takes so far</div>
+    </div>
+
+    <div class="st-section">
+      <div class="st-section-head"><span class="st-section-title">My Songs</span></div>
+      <input id="song-filter" class="st-song-filter" placeholder="Filter your songs...">
+      <div id="song-list" data-testid="song-list" class="st-row" style="margin-top:8px"></div>
+    </div>
+
+    <div class="st-section">
+      <div class="st-section-head"><span class="st-section-title">Start from</span></div>
+      <div class="st-row">
+        <button class="st-pill selected" data-testid="start-idea">💭 An idea</button>
+        <button class="st-pill" disabled data-testid="start-memo">🎤 Voice memo (coming soon)</button>
+        <button class="st-pill" disabled data-testid="start-reference">🎧 Reference song (coming soon)</button>
+        <button class="st-pill" disabled data-testid="start-continue">📂 Continue a song (coming soon)</button>
+      </div>
+    </div>
+
+    <div class="st-section">
+      <div class="st-section-head">
+        <span class="st-section-title">Lyrics</span>
+        <span class="st-ai-hint">how much should the AI write?</span>
+      </div>
+      <div class="st-effort">
+        <div class="st-effort-track"></div>
+        <div class="st-effort-stop active" data-level="manual" data-testid="effort-manual"><div class="dot"></div><div class="label">Complete manual</div></div>
+        <div class="st-effort-stop" data-level="helps" data-testid="effort-helps"><div class="dot"></div><div class="label">AI helps with mine</div></div>
+        <div class="st-effort-stop" data-level="extra" data-testid="effort-extra"><div class="dot"></div><div class="label">AI adds extra</div></div>
+        <div class="st-effort-stop" data-level="all" data-testid="effort-all"><div class="dot"></div><div class="label">All AI</div></div>
+      </div>
+      <textarea id="lyrics-text" data-testid="lyrics-text" class="st-textarea" placeholder="Type or paste your words here."></textarea>
+    </div>
+
+    <div class="st-section">
+      <div class="st-section-head">
+        <span class="st-section-title">Instructions</span>
+        <span class="st-ai-hint">tap below to add, or just type your own</span>
+      </div>
+
+      <div class="st-pickrow-label">SOUND</div>
+      <div id="sound-pills" class="st-row"></div>
+      <div class="st-pickrow-label">VOICE</div>
+      <div id="voice-pills" class="st-row"></div>
+      <div class="st-pickrow-label">FEEL</div>
+      <div id="feel-pills" class="st-row"></div>
+
+      <div class="st-pickrow-label">YOUR WORDS (this is what actually gets sent)</div>
+      <textarea id="instructions-text" data-testid="instructions-text" class="st-textarea"
+                placeholder="e.g. keep the chorus bigger than the verse, slower in the bridge"></textarea>
+    </div>
+
+    <div class="st-section">
+      <div class="st-section-head"><span class="st-section-title">Already made for this song</span></div>
+      <div id="takes-list" data-testid="takes-list" class="st-row">
+        <span class="st-ai-hint" style="opacity:.85">Nothing yet. Make the song below to get started.</span>
+      </div>
+    </div>
+
+    <div class="st-section">
+      <div class="st-output-row">
+        <div class="st-stepper">
+          <span class="st-section-title" style="text-transform:none">Takes</span>
+          <button id="takes-minus" type="button">-</button>
+          <b id="takes-count">2</b>
+          <button id="takes-plus" type="button">+</button>
+        </div>
+        <label class="st-checkline">
+          <input type="checkbox" disabled data-testid="cubase-checkbox">Give me separate tracks, ready for Cubase (coming soon)
+        </label>
+        <button id="more-options-toggle" type="button" class="st-more-toggle">▸ More options (length, tempo, key)</button>
+      </div>
+      <div id="more-options" class="st-more-fields">
+        <label>Length (s) <input id="opt-duration" type="number" value="120" min="10" max="240"></label>
+        <label>Tempo (BPM) <input id="opt-bpm" type="number" placeholder="auto"></label>
+        <label>Key <input id="opt-key" type="text" placeholder="e.g. E minor"></label>
+      </div>
+    </div>
+
+    <div class="st-bottombar">
+      <button id="open-folder-btn" type="button" class="st-folder-link">📁 Open this song's folder</button>
+      <button id="make-button" data-testid="make-button" type="button" class="st-make-btn">▶ Make the song</button>
+    </div>
+    <div id="job-status" data-testid="job-status" class="st-job-status" hidden></div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
 </html>

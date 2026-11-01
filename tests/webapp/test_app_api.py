@@ -65,3 +65,18 @@ def test_post_open_folder_calls_os_startfile(monkeypatch):
     monkeypatch.setattr(app.os, "startfile", lambda p: calls.append(p))
     client.post("/api/open-folder", json={"name": "s"})
     assert calls
+
+
+def test_get_take_audio_serves_file_by_index(monkeypatch, tmp_path):
+    take_file = tmp_path / "mix.mp3"
+    take_file.write_bytes(b"audio-bytes")
+    monkeypatch.setattr(app.songs, "list_takes", lambda n: [{"id": "mix", "mp3": str(take_file), "version": 0}])
+    resp = client.get("/api/songs/s/takes/0")
+    assert resp.status_code == 200
+    assert resp.content == b"audio-bytes"
+
+
+def test_get_take_audio_404_for_out_of_range_index(monkeypatch):
+    monkeypatch.setattr(app.songs, "list_takes", lambda n: [])
+    resp = client.get("/api/songs/s/takes/0")
+    assert resp.status_code == 404
