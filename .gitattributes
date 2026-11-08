@@ -4,3 +4,4 @@
 *.flac binary
 *.sf2 binary
 *.nam binary
+*.patch -text
