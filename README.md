@@ -38,7 +38,9 @@ Every track below was composed by an AI agent and rendered 100% locally by this 
 | 🎻 **Expression** | pitch bends, 808 slides, vibrato, sustain pedal, MIDI CC curves, volume/pan/filter automation, humanize, strum, double-tracked guitars, sidechain ducking |
 | 🎚️ **Mix & master** | role-based auto EQ, shared reverb bus, mono low end, glue compression, look-ahead limiter, LUFS loudness targets (streaming −14, loud −9, dynamic −18...) with a true-peak ceiling |
 | ✨ **AI realism pass** | optional ACE-Step "cover" re-synthesis that keeps your song's structure |
-| 🤖 **Any AI agent** | MCP server (10 tools) + a plain CLI, so it works with Claude Code, Codex, Cursor, or a shell script |
+| 🪄 **Prompt → song** | `generate_song`: a finished song (vocals included) straight from a text prompt + optional lyrics; an LM plans the structure, the turbo DiT renders it, takes ranked by lyric accuracy, then mastered |
+| 🩹 **Enhance your recordings** | `enhance_recording`: phone / laptop / old demo → hum removal, learned-noise-print denoising, tonal-balance EQ, top-end rebuild above codec cutoffs, compression, mono→stereo, LUFS mastering; optional AI re-performance on top. Each step measures first and skips itself when not needed |
+| 🤖 **Any AI agent** | MCP server (12 tools) + a plain CLI, so it works with Claude Code, Codex, Cursor, or a shell script |
 
 ## Quick start (Windows)
 
@@ -64,7 +66,14 @@ Then open **a new** Claude Code or Codex session anywhere and ask for a song:
 
 > Write a fun classic-rock love song for my wife using these messages: ... Add a male singer.
 
+> Generate a 2-minute 90s alt-rock song with a raspy female singer about leaving home. Give me 2 takes.
+
+> Here's a song I recorded on my phone: C:\Users\me\Music\demo.m4a. Make it sound better.
+
 Give feedback in plain words ("drums louder", "make the chorus bigger") and it re-renders.
+
+**Tip for your own recordings:** leave about a second of silence before you start playing. The noise
+reducer learns the background noise from it, so it can remove hiss and room noise without touching the music.
 
 ## Command line (no AI agent needed)
 
@@ -72,6 +81,9 @@ Give feedback in plain words ("drums louder", "make the chorus bigger") and it r
 .\.venv\Scripts\python.exe -m studio render examples\rock_vocals.json --play   # instrumental
 .\.venv\Scripts\python.exe -m studio vocals lucky_ones --takes 2 --play          # add the AI singer
 .\.venv\Scripts\python.exe -m studio enhance iron_tide "heavy metal, live band" --play
+.\.venv\Scripts\python.exe -m studio generate "synthwave, female vocals, nostalgic" --lyrics lyrics.txt --takes 2 --play
+.\.venv\Scripts\python.exe -m studio restore my_recording.m4a --play                 # clean up + master
+.\.venv\Scripts\python.exe -m studio restore my_recording.m4a --ai-style "acoustic folk, warm studio" --play
 .\.venv\Scripts\python.exe -m studio instruments guitar
 .\.venv\Scripts\python.exe -m studio library        # list / download sample libraries
 .\.venv\Scripts\python.exe -m studio guide          # the full song format
@@ -106,7 +118,8 @@ See [GUIDE.md](GUIDE.md) for the full format (notes, patterns, chords, expressio
 ## MCP tools
 
 `get_composition_guide` · `list_instruments` · `list_sound_sources` · `render_song` · `add_vocals` ·
-`enhance_song` · `install_library` · `list_songs` · `get_song` · `play_song`
+`enhance_song` · `generate_song` · `enhance_recording` · `install_library` · `list_songs` · `get_song` ·
+`play_song`
 
 ## Project layout
 

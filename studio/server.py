@@ -25,7 +25,11 @@ mcp = MCPServer(
         "ALWAYS call get_composition_guide once before writing your first song. "
         "Workflow: get_composition_guide -> write song JSON -> render_song -> play_song -> iterate "
         "(get_song, edit, render_song again with the same name). Songs with a \"vocals\" section (lyrics) get "
-        "an AI singer via add_vocals after rendering. Optional: enhance_song for an AI realism pass."
+        "an AI singer via add_vocals after rendering. Optional: enhance_song for an AI realism pass. "
+        "Two other routes: generate_song makes a finished, realistic song (vocals included) straight from a "
+        "text prompt with the local AI model (best when the user wants a polished result, not editable notes); "
+        "enhance_recording cleans up and masters the user's own recorded audio file (noise, hum, dull or thin "
+        "sound, low volume), optionally followed by an AI re-performance."
     ),
 )
 
@@ -94,6 +98,57 @@ def enhance_song(name: str, style: str, faithfulness: float = 0.65, seed: int = 
 
 
 @mcp.tool()
+def generate_song(prompt: str, lyrics: str = "", name: str | None = None, duration: float = 120,
+                  bpm: int | None = None, key: str = "", language: str = "en", takes: int = 1,
+                  quality: str = "high", seed: int = -1, loudness: str = "streaming") -> dict:
+    """Generate a complete, realistic-sounding song from a text prompt (ACE-Step 1.5, local GPU,
+    ~1-4 minutes per take). Unlike render_song, the AI model performs everything itself, vocals included.
+    prompt: genre, era, instruments, vocal type, mood, tempo feel and production, comma-separated, e.g.
+      "90s alternative rock, distorted guitars, live drums, raspy male vocals, anthemic, polished studio mix".
+    lyrics: optional; use section tags: "[verse]\\n...\\n[chorus]\\n...\\n[bridge]\\n...". Empty = instrumental.
+    duration: seconds (10-240). bpm / key ("E minor"): optional; the AI picks them if omitted.
+    takes: generate several and rank them (by lyric accuracy when there are lyrics); offer the user 2-3.
+    quality: "high" (an LM plans the song first: better structure, slower) or "draft" (fast).
+    Writes output/<name>/mix.mp3 (best take) and mix_take2.mp3 ...; play with play_song."""
+    from .generate import generate
+    return generate(prompt, lyrics=lyrics, name=name, duration=duration, bpm=bpm, key=key, language=language,
+                    takes=takes, seed=seed, quality=quality, loudness=loudness)
+
+
+@mcp.tool()
+def enhance_recording(path: str, name: str | None = None, denoise: float = 0.5, eq: float = 0.6,
+                      brighten: float = 0.6, stereo: bool = True, loudness: str = "streaming",
+                      ai_style: str = "", faithfulness: float = 0.75, seed: int = -1) -> dict:
+    """Improve the sound of the user's own recording (WAV/MP3/FLAC/M4A/OGG; phone, laptop mic, old demo).
+    Restoration keeps their performance: removes rumble and mains hum, reduces background noise/hiss,
+    rebalances the tone toward a commercial mix, restores missing top end, compresses gently, widens mono
+    recordings (mono-compatible) and masters to a loudness target ("streaming" -14 LUFS, "loud", "dynamic"...).
+    denoise / eq / brighten: 0-1 strengths (0 disables that step). Each step is skipped if not needed.
+    ai_style: optional; if set, also runs the AI re-performance (ACE-Step, local GPU, max 240 s audio) on the
+      restored audio, e.g. "acoustic pop ballad, female vocals, warm studio recording". It sounds more
+      produced but may change details; faithfulness 0-1 (higher = closer to the recording).
+    Outputs mix (restored), original, and enhanced (AI) versions; compare them with play_song."""
+    from .restore import enhance_recording as run
+    return run(path, name=name, denoise=denoise, eq=eq, brighten=brighten, stereo=stereo, loudness=loudness,
+               ai_style=ai_style, faithfulness=faithfulness, seed=seed)
+
+
+@mcp.tool()
+def repaint_section(path: str, start: str, end: str, style: str, lyrics: str = "", takes: int = 2,
+                    seed: int = -1, bpm: int | None = None, instrumental: bool = False,
+                    out_dir: str | None = None) -> dict:
+    """Redo ONE part of a finished song audio file and keep the rest exactly as it is (ACE-Step repaint,
+    local GPU, max 240 s songs). start/end: "1:12" or seconds. style: the song's style description, plus what
+    this part should sound like. lyrics: the WHOLE song's lyrics, with new lines for this part if the words
+    should change (required unless instrumental=True; without them the singer would be dropped).
+    The new part is spliced into the original audio, so untouched sections stay bit-identical.
+    To fix several parts, call once per part, each time on the take the user picked."""
+    from .repaint import repaint
+    return repaint(path, start, end, style, lyrics=lyrics, out_dir=out_dir, takes=takes, seed=seed, bpm=bpm,
+                   instrumental=instrumental)
+
+
+@mcp.tool()
 def add_vocals(name: str, takes: int = 1, seed: int = -1) -> dict:
     """Add an AI singer (ACE-Step 1.5, local GPU, several minutes per take) to a rendered song.
     Uses the song's "vocals" section: {"lyrics": "[verse]...[chorus]...", "style": "...", "language": "en"}.
@@ -143,9 +198,11 @@ def get_song(name: str) -> dict:
 @mcp.tool()
 def play_song(name: str, version: str = "mix") -> str:
     """Open a rendered song in the user's default audio player so they can listen.
-    version: "mix" (instrumental), "vocals" (with the AI singer), "vocals_take2", ..., or "enhanced"."""
+    version: "mix" (instrumental / restored recording / generated song), "vocals" (with the AI singer),
+    "vocals_take2", ..., "take2", ... (extra generate_song takes), "enhanced", or "original" (the
+    untouched input of enhance_recording)."""
     d = render.OUTPUT_DIR / name
-    stem = "mix" if version == "mix" else f"mix_{version}"
+    stem = version if version in ("mix", "original") else f"mix_{version}"
     names = (f"{stem}.mp3", f"{stem}.wav")
     for f in names:
         if (d / f).exists():

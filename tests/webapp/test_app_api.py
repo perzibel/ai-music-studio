@@ -1,6 +1,8 @@
 import threading
 import time
 
+import pytest
+
 from fastapi.testclient import TestClient
 
 from webapp import app
@@ -60,11 +62,47 @@ def test_get_preview_404_for_unknown_genre(monkeypatch):
     assert resp.status_code == 404
 
 
-def test_post_open_folder_calls_os_startfile(monkeypatch):
+def test_post_open_folder_calls_os_startfile(monkeypatch, tmp_path):
+    (tmp_path / "s").mkdir()
+    monkeypatch.setattr(app, "OUTPUT_DIR", tmp_path)
+    monkeypatch.setattr(app.songs, "OUTPUT_DIR", tmp_path)
     calls = []
     monkeypatch.setattr(app.os, "startfile", lambda p: calls.append(p))
     client.post("/api/open-folder", json={"name": "s"})
     assert calls
+
+
+@pytest.mark.parametrize("name", ["..", "..\\..\\Windows\\System32\\calc.exe", "C:\\Windows", "a\\..\\..\\x",
+                                  ".hidden", "a..b"])
+def test_open_folder_rejects_path_traversal(monkeypatch, tmp_path, name):
+    monkeypatch.setattr(app, "OUTPUT_DIR", tmp_path)
+    monkeypatch.setattr(app.songs, "OUTPUT_DIR", tmp_path)
+    calls = []
+    monkeypatch.setattr(app.os, "startfile", lambda p: calls.append(p))
+    resp = client.post("/api/open-folder", json={"name": name})
+    assert resp.status_code == 400 and not calls
+
+
+def test_open_folder_never_opens_a_file(monkeypatch, tmp_path):
+    (tmp_path / "evil.exe").write_bytes(b"x")
+    monkeypatch.setattr(app, "OUTPUT_DIR", tmp_path)
+    monkeypatch.setattr(app.songs, "OUTPUT_DIR", tmp_path)
+    calls = []
+    monkeypatch.setattr(app.os, "startfile", lambda p: calls.append(p))
+    resp = client.post("/api/open-folder", json={"name": "evil.exe"})
+    assert resp.status_code == 404 and not calls
+
+
+def test_make_rejects_backslash_traversal(monkeypatch):
+    submitted = []
+    monkeypatch.setattr(app.job_manager, "submit", lambda *a, **k: submitted.append(a) or "id")
+    resp = client.post("/api/songs/..%5C..%5CDesktop/make", json={"caption": "x", "lyrics": "", "takes": 1})
+    assert resp.status_code == 400 and not submitted
+
+
+def test_rejects_foreign_host_header():
+    resp = client.get("/api/songs", headers={"host": "evil.example.com"})
+    assert resp.status_code == 400
 
 
 def test_get_take_audio_serves_file_by_index(monkeypatch, tmp_path):

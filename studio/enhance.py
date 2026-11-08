@@ -46,25 +46,34 @@ def low_vram_args() -> list[str]:
 
 def run_ace(args: list[str], timeout: int = 3600) -> dict:
     """Run the bridge with the given arguments; retries with CPU offload if the GPU runs out of memory."""
+    from .memguard import ace_is_busy, default_limit_gb, run_guarded
     if not available():
         return {"error": f"ACE-Step is not installed at {ACE_DIR}. Run setup.ps1 -WithAceStep."}
+    busy = ace_is_busy()
+    if busy:
+        return {"error": busy}
     for offload in (False, True):
         cmd = [str(ACE_PY), "-u", str(BRIDGE), *args] + (["--offload"] if offload else [])
         env = {**os.environ, "PYTHONIOENCODING": "utf-8",
                "ACESTEP_GENERATION_TIMEOUT": str(timeout)}  # ACE-Step's own limit is 10 minutes
-        proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace",
-                              timeout=timeout, env=env, cwd=str(ACE_DIR))
-        m = re.search(r"^ACE_RESULT (.*)$", proc.stdout, re.M)
+        # Memory-capped and killed with us: a runaway run can't freeze Windows or outlive its caller.
+        code, stdout, stderr, peak = run_guarded(cmd, timeout, text=True, encoding="utf-8", errors="replace",
+                                                 env=env, cwd=str(ACE_DIR))
+        m = re.search(r"^ACE_RESULT (.*)$", stdout, re.M)
         if not m:
-            return {"error": f"ACE-Step failed (exit {proc.returncode}): {(proc.stdout + proc.stderr)[-1500:]}"}
+            hint = (f" It hit the {default_limit_gb()} GB memory cap (AI_MEMORY_LIMIT_GB) and was stopped "
+                    "to protect the PC." if peak and peak >= default_limit_gb() * 0.95 else "")
+            return {"error": f"ACE-Step failed (exit {code}).{hint} {(stdout + stderr)[-1500:]}"}
         result = json.loads(m.group(1))
+        result["peak_memory_gb"] = peak
         err = str(result.get("error", "")).lower()
         if result.get("ok") or not ("out of memory" in err or "insufficient free vram" in err):
             break
     if not result.get("ok") or not result.get("paths"):
         return {"error": result.get("error") or "ACE-Step produced no audio", "detail": result.get("trace")}
     # Success: callers treat an "error" key as failure, so keep partial problems separately.
-    return {"paths": result["paths"], "seconds": result.get("seconds"), "partial_errors": result.get("error")}
+    return {"paths": result["paths"], "seconds": result.get("seconds"), "partial_errors": result.get("error"),
+            "peak_memory_gb": result.get("peak_memory_gb")}
 
 
 def load_audio(path: str):
@@ -86,6 +95,7 @@ def save_mix(audio, sr: int, stem: Path) -> dict:
 
 def enhance(song_dir: Path, caption: str, strength: float = 0.65, seed: int = -1, steps: int = 8,
             bpm: int | None = None, loudness="streaming") -> dict:
+    song_dir = Path(song_dir).resolve()  # the bridge runs with ACE-Step's folder as cwd
     src = song_dir / "mix.wav"
     if not src.exists():
         return {"error": f"No mix.wav in {song_dir}; render the song first."}
@@ -95,7 +105,7 @@ def enhance(song_dir: Path, caption: str, strength: float = 0.65, seed: int = -1
     work = song_dir / "enhanced"
     work.mkdir(exist_ok=True)
     args = ["--src", str(src), "--out-dir", str(work), "--caption", caption, "--strength", str(strength),
-            "--duration", f"{duration:.2f}", "--seed", str(seed), "--steps", str(steps)]
+            "--duration", f"{duration:.2f}", "--seed", str(seed), "--steps", str(steps), *low_vram_args()]
     if bpm:
         args += ["--bpm", str(int(bpm))]
     result = run_ace(args)

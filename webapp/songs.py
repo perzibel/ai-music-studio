@@ -24,6 +24,18 @@ def _slug(title: str) -> str:
     return slug or "untitled"
 
 
+_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _.-]{0,79}$")
+
+
+def is_safe_name(name: str) -> bool:
+    """A song name from a request must be one plain folder directly inside OUTPUT_DIR: no '..', no slashes
+    or backslashes (Windows treats '\\' as a separator), no drive letters."""
+    if not isinstance(name, str) or not _NAME_RE.match(name) or ".." in name:
+        return False
+    root = OUTPUT_DIR.resolve()
+    return (root / name).resolve().parent == root
+
+
 def new_song_name(title: str) -> str:
     base = _slug(title)
     name = base
