@@ -1,0 +1,444 @@
+diff --git a/acestep/ui/gradio/events/results/batch_management_wrapper.py b/acestep/ui/gradio/events/results/batch_management_wrapper.py
+index 4b75887..2e14259 100644
+--- a/acestep/ui/gradio/events/results/batch_management_wrapper.py
++++ b/acestep/ui/gradio/events/results/batch_management_wrapper.py
+@@ -20,8 +20,10 @@ from acestep.ui.gradio.events.results.batch_queue import (
+ from acestep.ui.gradio.events.results.generation_info import IS_WINDOWS
+ from acestep.ui.gradio.events.results.generation_progress import generate_with_progress
+ from acestep.ui.gradio.i18n import t
++from acestep.ui.gradio.p3_control import stoppable
+ 
+ 
++@stoppable
+ def generate_with_batch_management(
+     dit_handler, llm_handler,
+     captions, lyrics, bpm, key_scale, time_signature, vocal_language,
+diff --git a/acestep/ui/gradio/events/results/batch_queue.py b/acestep/ui/gradio/events/results/batch_queue.py
+index a0709f9..f60a92c 100644
+--- a/acestep/ui/gradio/events/results/batch_queue.py
++++ b/acestep/ui/gradio/events/results/batch_queue.py
+@@ -58,8 +58,11 @@ def store_batch_in_queue(
+     # unbounded RAM accumulation (each generation's tensors are ~4-8 GB).
+     # Non-tensor metadata (e.g. lm_metadata, time_costs) is preserved so
+     # that batch navigation and display still work for older batches.
++    # P3rzible: also drop the previous batch's tensors (not just 2+ behind). On an 8 GB GPU with CPU
++    # offload, keeping them made the 2nd generation run out of memory. Older batches stay playable;
++    # only re-scoring / LRC of an older batch is lost.
+     for old_idx in list(batch_queue.keys()):
+-        if old_idx < batch_index - 1:
++        if old_idx < batch_index:
+             old_extra = batch_queue[old_idx].get("extra_outputs", {})
+             for k in list(old_extra.keys()):
+                 if isinstance(old_extra[k], torch.Tensor):
+diff --git a/acestep/ui/gradio/events/results/batch_queue_test.py b/acestep/ui/gradio/events/results/batch_queue_test.py
+index 2119b16..0adea70 100644
+--- a/acestep/ui/gradio/events/results/batch_queue_test.py
++++ b/acestep/ui/gradio/events/results/batch_queue_test.py
+@@ -126,13 +126,13 @@ class StoreBatchInQueueTests(unittest.TestCase):
+             generation_info="new info",
+             seeds="99",
+         )
+-        # Tensor is preserved (not deleted) when already on CPU
+-        self.assertIn("pred_latents", result[0]["extra_outputs"])
++        # P3rzible: the previous batch's tensors are released to keep RAM bounded
++        self.assertNotIn("pred_latents", result[0]["extra_outputs"])
+         self.assertIn(1, result)
+ 
+     @unittest.skipUnless(__import__("torch").cuda.is_available(), "CUDA not available")
+-    def test_store_offloads_cuda_tensor_to_cpu(self):
+-        """Storing a new batch should move CUDA tensors to CPU, freeing VRAM."""
++    def test_store_releases_previous_cuda_tensor(self):
++        """Storing a new batch releases the previous batch's CUDA tensors (VRAM and RAM)."""
+         import torch
+         cuda_tensor = torch.zeros(2, 4, device="cuda")
+         queue = {
+@@ -151,12 +151,10 @@ class StoreBatchInQueueTests(unittest.TestCase):
+             generation_info="new info",
+             seeds="99",
+         )
+-        offloaded = queue[0]["extra_outputs"]["pred_latents"]
+-        self.assertFalse(offloaded.is_cuda, "Tensor should have been moved to CPU")
+-        self.assertEqual(offloaded.device.type, "cpu")
++        self.assertNotIn("pred_latents", queue[0]["extra_outputs"])
+ 
+-    def test_store_keeps_previous_batch_and_clears_older_tensors(self):
+-        """Only the previous batch keeps tensors; older batches are cleared."""
++    def test_store_keeps_only_newest_batch_tensors(self):
++        """Only the newly stored batch keeps tensors; all earlier batches are cleared."""
+         import torch
+         tensor_a = torch.ones(1)
+         tensor_b = torch.ones(2)
+@@ -172,7 +170,8 @@ class StoreBatchInQueueTests(unittest.TestCase):
+             seeds="7",
+         )
+         self.assertNotIn("pred_latents", queue[0]["extra_outputs"])
+-        self.assertIn("pred_latents", queue[1]["extra_outputs"])
++        self.assertNotIn("pred_latents", queue[1]["extra_outputs"])
++        self.assertEqual(queue[2]["audio_paths"], ["/tmp/c.mp3"])
+ 
+     def test_store_first_batch_no_prev_cleanup(self):
+         """Storing the first batch (index 0) should not fail when there is no previous batch."""
+diff --git a/acestep/ui/gradio/i18n/en.json b/acestep/ui/gradio/i18n/en.json
+index 20f6d69..9a8c65d 100644
+--- a/acestep/ui/gradio/i18n/en.json
++++ b/acestep/ui/gradio/i18n/en.json
+@@ -1,6 +1,6 @@
+ {
+   "app": {
+-    "title": "🎛️ ACE-Step V1.5 Playground💡",
++    "title": "🎛️ P3rzible Music Studio",
+     "subtitle": "Pushing the Boundaries of Open-Source Music Generation"
+   },
+   "common": {
+diff --git a/acestep/ui/gradio/i18n/he.json b/acestep/ui/gradio/i18n/he.json
+index 2ade5aa..3f7c2c4 100644
+--- a/acestep/ui/gradio/i18n/he.json
++++ b/acestep/ui/gradio/i18n/he.json
+@@ -1,6 +1,6 @@
+ {
+   "app": {
+-    "title": "🎛️ ACE-Step V1.5 Playground💡",
++    "title": "🎛️ P3rzible Music Studio",
+     "subtitle": "פורצים את גבולות יצירת המוזיקה בקוד פתוח"
+   },
+   "common": {
+diff --git a/acestep/ui/gradio/i18n/pt.json b/acestep/ui/gradio/i18n/pt.json
+index 0718af0..596fa60 100644
+--- a/acestep/ui/gradio/i18n/pt.json
++++ b/acestep/ui/gradio/i18n/pt.json
+@@ -1,6 +1,6 @@
+ {
+   "app": {
+-    "title": "🎛️ ACE-Step V1.5 Playground💡",
++    "title": "🎛️ P3rzible Music Studio",
+     "subtitle": "Expandindo os Limites da Geração de Música de Código Aberto"
+   },
+   "common": {
+diff --git a/acestep/ui/gradio/interfaces/generation_tab_section.py b/acestep/ui/gradio/interfaces/generation_tab_section.py
+index 30912c6..74fb8f2 100644
+--- a/acestep/ui/gradio/interfaces/generation_tab_section.py
++++ b/acestep/ui/gradio/interfaces/generation_tab_section.py
+@@ -29,6 +29,7 @@ from .generation_tab_secondary_controls import (
+     build_repainting_controls,
+ )
+ from .generation_tab_variation_morph_controls import build_variation_morph_controls
++from acestep.ui.gradio.p3_control import build_status_row
+ 
+ 
+ def create_generation_tab_section(
+@@ -88,6 +89,7 @@ def create_generation_tab_section(
+             lm_initialized=lm_initialized,
+             service_mode=service_mode,
+         )
++        build_status_row()  # P3rzible: live current step + Stop & free memory
+ 
+     result: dict[str, Any] = {}
+     result.update(mode_controls)
+diff --git a/acestep/ui/gradio/p3_control.py b/acestep/ui/gradio/p3_control.py
+new file mode 100644
+index 0000000..f462019
+--- /dev/null
++++ b/acestep/ui/gradio/p3_control.py
+@@ -0,0 +1,222 @@
++"""P3rzible Music Studio additions: live "current step" status, a Stop button that really stops a
++generation and frees its memory, and memory cleanup between generations.
++
++How Stop works: the engine has no interrupt hook, so Stop raises GenerationStopped inside the thread that
++runs the generation (PyThreadState_SetAsyncExc). It fires at the next Python step of whatever phase is
++running (LM planning, a diffusion step, an audio-decode chunk), unwinds normally (model offload context
++managers run their cleanup), and the wrapper then clears caches so RAM/VRAM is released.
++"""
++from __future__ import annotations
++
++import ctypes
++import functools
++import gc
++import inspect
++import threading
++import time
++
++import gradio as gr
++from loguru import logger
++
++STOP_OUTPUTS = 55  # number of outputs of the Generate event (same count its own error path yields)
++
++
++class GenerationStopped(BaseException):
++    """Raised inside the generation thread when the user presses Stop.
++
++    BaseException (like KeyboardInterrupt) so the engine's broad ``except Exception`` handlers
++    can't swallow it and carry on; ``finally`` blocks and context managers still run.
++    """
++
++
++_lock = threading.Lock()
++_state = {"thread": None, "running": False, "stopping": False, "started": 0.0,
++          "value": 0.0, "desc": "", "last": "Idle - ready to generate."}
++
++
++def _mem_text() -> str:
++    try:
++        import psutil
++        proc = psutil.Process()
++        used = proc.memory_info().private / 1024 ** 3 if hasattr(proc.memory_info(), "private") \
++            else proc.memory_info().rss / 1024 ** 3
++        sysm = psutil.virtual_memory()
++        text = f"App memory {used:.1f} GB · PC RAM free {sysm.available / 1024 ** 3:.1f} GB"
++    except Exception:
++        text = ""
++    try:
++        import torch
++        if torch.cuda.is_available():
++            text += f" · GPU {torch.cuda.memory_allocated() / 1024 ** 3:.1f} GB"
++    except Exception:
++        pass
++    return text
++
++
++class _ProgressProxy:
++    """Wraps gr.Progress: records every update for the status bar, then forwards it."""
++
++    def __init__(self, inner):
++        self._inner = inner
++
++    def __call__(self, value=None, desc=None, *args, **kwargs):
++        with _lock:
++            if isinstance(value, (int, float)):
++                _state["value"] = float(value)
++            if desc:
++                _state["desc"] = str(desc)
++        try:
++            return self._inner(value, desc, *args, **kwargs)
++        except GenerationStopped:
++            raise
++        except Exception:  # an unbound gr.Progress must never break a generation
++            return None
++
++    def __getattr__(self, name):
++        return getattr(self._inner, name)
++
++
++def begin(progress):
++    """Call at the start of a generation (in its thread). Returns the progress object to pass on."""
++    with _lock:
++        _state.update(thread=threading.get_ident(), running=True, stopping=False, started=time.time(),
++                      value=0.0, desc="Starting...")
++    return _ProgressProxy(progress)
++
++
++def end(outcome: str) -> None:
++    """Call when a generation finishes, fails or is stopped (in its thread)."""
++    with _lock:
++        tid = _state["thread"]
++        elapsed = time.time() - _state["started"] if _state["started"] else 0
++        _state.update(thread=None, running=False, stopping=False, value=0.0, desc="",
++                      last=f"{outcome} ({elapsed:.0f}s).")
++    if tid is not None:  # cancel a Stop that arrived too late to fire, so it can't hit unrelated work later
++        ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_ulong(tid), None)
++    free_memory()
++
++
++def free_memory() -> None:
++    gc.collect()
++    try:
++        import torch
++        if torch.cuda.is_available():
++            torch.cuda.empty_cache()
++            torch.cuda.ipc_collect()
++            # CPU offload moves models RAM<->GPU every phase through pinned host buffers, which
++            # PyTorch caches and never returns on its own: this is what made RAM grow per run.
++            host_empty = getattr(torch._C, "_host_emptyCache", None)
++            if host_empty is not None:
++                host_empty()
++    except Exception as exc:  # cleanup must never break the UI
++        logger.warning("[p3] memory cleanup: {}", exc)
++
++
++def request_stop():
++    with _lock:
++        tid, running = _state["thread"], _state["running"]
++        if running and tid is not None:
++            _state["stopping"] = True
++            _state["desc"] = "Stopping... (finishing the current step)"
++    if not running or tid is None:  # status_text() takes the lock itself: call it outside
++        free_memory()
++        return status_text() + "\n\nNothing is running. Memory caches cleared."
++    ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_ulong(tid), ctypes.py_object(GenerationStopped))
++    gr.Info("Stopping the generation and freeing memory...")
++    return status_text()
++
++
++RESTART_EXIT_CODE = 75  # studio/launch_app.py restarts the app at once on this code, without an error
++HIGH_MEMORY_GB = 26.0  # above this while idle, suggest a restart
++
++
++def request_restart():
++    """Exit the whole app process so the launcher restarts it: returns every byte of RAM and VRAM."""
++    import os
++    with _lock:
++        running = _state["running"]
++    if running:
++        return status_text() + "\n\nA generation is running: press Stop first, then Restart."
++    logger.info("[p3] restart requested by user")
++
++    def _exit_soon():
++        time.sleep(0.5)  # let this response reach the browser first
++        os._exit(RESTART_EXIT_CODE)
++
++    threading.Thread(target=_exit_soon, daemon=True).start()
++    return ("♻️ **Restarting the engine to free all memory...** Reload this page in about a minute "
++            "(the window on your desktop shows when it's ready).")
++
++
++def _app_memory_gb() -> float:
++    try:
++        import psutil
++        info = psutil.Process().memory_info()
++        return getattr(info, "private", info.rss) / 1024 ** 3
++    except Exception:
++        return 0.0
++
++
++def status_text() -> str:
++    with _lock:
++        s = dict(_state)
++    mem = _mem_text()
++    if s["running"]:
++        pct = int(round(s["value"] * 100))
++        mins, secs = divmod(int(time.time() - s["started"]), 60)
++        icon = "⏳ Stopping" if s["stopping"] else "▶️ Working"
++        return f"**{icon}: {s['desc'] or 'Working...'}** · {pct}% · {mins}:{secs:02d} elapsed  \n{mem}"
++    hint = ""
++    if _app_memory_gb() > HIGH_MEMORY_GB:
++        hint = "  \n⚠️ Memory is high: press **♻ Restart engine** to free it all before the next run."
++    return f"⏹️ {s['last']}  \n{mem}{hint}"
++
++
++def stoppable(fn):
++    """Decorate the Generate click handler (a generator): status tracking + Stop support.
++
++    Keeps fn's signature (Gradio reads it to inject gr.Progress), wraps that progress object so the
++    status bar sees every update, and turns a Stop into a clean "stopped" result instead of an error.
++    """
++    sig = inspect.signature(fn)
++
++    @functools.wraps(fn)
++    def wrapper(*args, **kwargs):
++        bound = sig.bind(*args, **kwargs)
++        bound.apply_defaults()
++        if "progress" in bound.arguments:
++            bound.arguments["progress"] = begin(bound.arguments["progress"])
++        else:
++            begin(None)
++        outcome = "Finished"
++        try:
++            yield from fn(*bound.args, **bound.kwargs)
++        except GenerationStopped:
++            outcome = "Stopped by you - memory freed"
++            logger.info("[p3] generation stopped by user")
++            gr.Info("Generation stopped. Memory has been freed.")
++            yield (gr.skip(),) * STOP_OUTPUTS
++        except BaseException:
++            outcome = "Failed - see the error message"
++            raise
++        finally:
++            end(outcome)
++
++    return wrapper
++
++
++def build_status_row():
++    """Status bar + Stop button, placed under the Generate button (must run inside gr.Blocks)."""
++    with gr.Row(equal_height=True):
++        with gr.Column(scale=18):
++            status = gr.Markdown(status_text(), elem_id="p3-status")
++        with gr.Column(scale=3, min_width=160):
++            stop_btn = gr.Button("⏹ Stop & free memory", variant="stop", elem_id="p3-stop-btn")
++            restart_btn = gr.Button("♻ Restart engine", variant="secondary", size="sm",
++                                    elem_id="p3-restart-btn")
++    timer = gr.Timer(1.0)
++    timer.tick(status_text, outputs=status, queue=False, show_progress="hidden")
++    # queue=False: must run immediately, not wait behind the generation it is stopping.
++    stop_btn.click(request_stop, outputs=status, queue=False, show_progress="hidden")
++    restart_btn.click(request_restart, outputs=status, queue=False, show_progress="hidden")
++    return status, stop_btn
+diff --git a/acestep/ui/gradio/p3_control_test.py b/acestep/ui/gradio/p3_control_test.py
+new file mode 100644
+index 0000000..1a81b8e
+--- /dev/null
++++ b/acestep/ui/gradio/p3_control_test.py
+@@ -0,0 +1,74 @@
++"""Tests for P3rzible status tracking and the Stop button (p3_control)."""
++import threading
++import time
++import unittest
++from unittest.mock import MagicMock, patch
++
++import gradio as gr
++
++from acestep.ui.gradio import p3_control
++
++
++def _fake_generation(steps, progress=gr.Progress()):
++    """Stand-in for the Generate handler: reports progress, sleeps per step, yields a result."""
++    for i in range(steps):
++        progress(i / steps, desc=f"Diffusion step {i + 1}/{steps}")
++        time.sleep(0.05)
++    yield "done"
++
++
++class StoppableTests(unittest.TestCase):
++    """Behaviour of the stoppable() wrapper, request_stop() and the status text."""
++
++    def setUp(self):
++        self.patches = [patch.object(p3_control.gr, "Info", MagicMock()),
++                        patch.object(p3_control, "free_memory", MagicMock())]
++        for p in self.patches:
++            p.start()
++
++    def tearDown(self):
++        for p in self.patches:
++            p.stop()
++
++    def test_finishes_normally_and_reports_steps(self):
++        """A run that is not stopped yields its result and records progress text."""
++        seen = []
++        wrapped = p3_control.stoppable(_fake_generation)
++        progress = MagicMock(side_effect=lambda *a, **k: seen.append(p3_control.status_text()))
++        self.assertEqual(list(wrapped(3, progress)), ["done"])
++        self.assertTrue(any("Diffusion step 2/3" in s for s in seen))
++        self.assertIn("Finished", p3_control.status_text())
++
++    def test_stop_interrupts_running_generation(self):
++        """Stop raises inside the worker thread; the run ends early with the skip result."""
++        wrapped = p3_control.stoppable(_fake_generation)
++        out = {}
++
++        def run():
++            out["items"] = list(wrapped(200, MagicMock()))
++
++        worker = threading.Thread(target=run)
++        worker.start()
++        time.sleep(0.3)
++        p3_control.request_stop()
++        worker.join(timeout=5)
++        self.assertFalse(worker.is_alive(), "generation did not stop")
++        self.assertEqual(len(out["items"]), 1)
++        self.assertEqual(len(out["items"][0]), p3_control.STOP_OUTPUTS)
++        self.assertIn("Stopped", p3_control.status_text())
++
++    def test_stop_when_idle_only_frees_memory(self):
++        """Pressing Stop with nothing running is harmless."""
++        text = p3_control.request_stop()
++        self.assertIn("Nothing is running", text)
++        p3_control.free_memory.assert_called()
++
++    def test_wrapper_keeps_signature_for_gradio(self):
++        """Gradio inspects the handler signature; the wrapper must expose the original one."""
++        import inspect
++        wrapped = p3_control.stoppable(_fake_generation)
++        self.assertIn("progress", inspect.signature(wrapped).parameters)
++
++
++if __name__ == "__main__":
++    unittest.main()
