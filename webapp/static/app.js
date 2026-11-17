@@ -229,7 +229,42 @@ function setupOpenFolderButton() {
   });
 }
 
+function applyStudioTitle(title) {
+  document.title = title;
+  document.getElementById("studio-title").textContent = title;
+}
+
+async function setupWelcome() {
+  const profile = await (await fetch("/api/profile")).json();
+  applyStudioTitle(profile.title);
+  if (!profile.needs_name) return;
+  const overlay = document.getElementById("welcome");
+  const input = document.getElementById("welcome-name");
+  const preview = document.getElementById("welcome-preview");
+  overlay.hidden = false;
+  input.focus();
+  input.addEventListener("input", () => {
+    preview.textContent = `${input.value.trim() || "..."} Music Studio`;
+  });
+  document.getElementById("welcome-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const resp = await fetch("/api/profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: input.value }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) {
+      document.getElementById("welcome-error").textContent = data.error;
+      return;
+    }
+    applyStudioTitle(data.title);
+    overlay.hidden = true;
+  });
+}
+
 window.addEventListener("DOMContentLoaded", () => {
+  setupWelcome();
   setupPills();
   setupEffortBar();
   setupTakesStepper();

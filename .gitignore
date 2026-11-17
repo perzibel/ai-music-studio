@@ -14,3 +14,4 @@ output/
 # Logs
 *.log
 .superpowers/
+studio_profile.json

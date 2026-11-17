@@ -75,6 +75,15 @@ Give feedback in plain words ("drums louder", "make the chorus bigger") and it r
 **Tip for your own recordings:** leave about a second of silence before you start playing. The noise
 reducer learns the background noise from it, so it can remove hiss and room noise without touching the music.
 
+## Desktop app (browser UI)
+
+```powershell
+powershell -ExecutionPolicy Bypass -File install_shortcut.ps1
+```
+
+Creates an **AI Music Studio** shortcut on your Desktop. Double-click it and the studio opens in your browser.
+The first time, it asks your name and renames itself **"<your name> Music Studio"**.
+
 ## Command line (no AI agent needed)
 
 ```powershell

@@ -6,10 +6,19 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+  <div id="welcome" class="st-welcome" hidden>
+    <form id="welcome-form" class="st-welcome-card">
+      <h1>Welcome</h1>
+      <p>What's your name? Your studio will be called <b id="welcome-preview">... Music Studio</b>.</p>
+      <input id="welcome-name" maxlength="40" autocomplete="off" placeholder="Your name" required>
+      <div id="welcome-error" class="st-welcome-error"></div>
+      <button type="submit" class="st-pill selected">Open my studio</button>
+    </form>
+  </div>
   <div class="st-wrap">
     <div class="st-topbar">
       <div>
-        <span id="song-name" class="st-song-name">New Song</span>
+        <span id="studio-title" class="st-studio-title">AI Music Studio</span><span id="song-name" class="st-song-name">New Song</span>
         <span class="st-ai-badge">✦ AI co-producer ready</span>
       </div>
       <div id="song-versions" class="st-versions">0 takes so far</div>

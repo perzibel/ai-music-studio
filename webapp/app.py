@@ -12,7 +12,7 @@ from pydantic import BaseModel
 
 from studio.render import OUTPUT_DIR
 
-from . import assist, generate_job, jobs, previews, songs
+from . import assist, generate_job, jobs, previews, profile, songs
 
 app = FastAPI()
 # Local-only app: refuse requests whose Host isn't this machine (blocks DNS-rebinding attacks from web pages).
@@ -40,6 +40,10 @@ class AssistRequest(BaseModel):
     current_lyrics: str
 
 
+class ProfileRequest(BaseModel):
+    name: str
+
+
 class OpenFolderRequest(BaseModel):
     name: str
 
@@ -49,6 +53,19 @@ def _bad_name(name: str):
     if not songs.is_safe_name(name):
         return JSONResponse({"error": f"Invalid song name: {name!r}"}, status_code=400)
     return None
+
+
+@app.get("/api/profile")
+def get_profile() -> dict:
+    return profile.load_profile()
+
+
+@app.post("/api/profile")
+def post_profile(body: ProfileRequest):
+    try:
+        return profile.save_name(body.name)
+    except ValueError as exc:
+        return JSONResponse({"error": str(exc)}, status_code=400)
 
 
 @app.get("/api/songs")

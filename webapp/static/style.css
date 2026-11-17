@@ -95,3 +95,15 @@ body {
 .st-job-status { margin-top: 10px; font-size: .85rem; color: var(--dim); }
 .st-job-status.error { color: #e85c3d; }
 .st-job-status.done { color: var(--amber); }
+
+/* First-run welcome: asks for the owner's name once. */
+.st-welcome { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 10; }
+.st-welcome[hidden] { display: none; }
+.st-welcome-card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 32px 36px; width: 380px; max-width: 90vw; display: flex; flex-direction: column; gap: 14px; }
+.st-welcome-card h1 { margin: 0; font-size: 26px; }
+.st-welcome-card p { margin: 0; color: var(--dim); }
+.st-welcome-card b { color: var(--amber); }
+.st-welcome-card input { background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 16px; }
+.st-welcome-card input:focus { outline: 1px solid var(--amber); }
+.st-welcome-error { color: #e57373; min-height: 1em; font-size: 13px; }
+.st-studio-title { font-weight: 700; color: var(--amber); margin-right: 14px; }
