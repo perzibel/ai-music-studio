@@ -81,8 +81,8 @@ reducer learns the background noise from it, so it can remove hiss and room nois
 powershell -ExecutionPolicy Bypass -File install_shortcut.ps1
 ```
 
-Creates an **AI Music Studio** shortcut on your Desktop. Double-click it and the studio opens in your browser.
-The first time, it asks your name and renames itself **"<your name> Music Studio"**.
+Creates an **AI Music Studio** shortcut on your Desktop. Double-click it and ACE-Step's web app opens at http://127.0.0.1:7860.
+The first time, it asks your name and titles the app **"<your name> Music Studio"**. (`start_simple_ui.cmd` starts the lighter built-in song UI instead.)
 
 ## Command line (no AI agent needed)
 

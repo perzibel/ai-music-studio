@@ -3,7 +3,7 @@
 $root = $PSScriptRoot
 $py = Join-Path $root ".venv\Scripts\python.exe"
 if (-not (Test-Path $py)) { Write-Error "Run setup.ps1 first (no .venv found)."; exit 1 }
-& $py -m pip install --quiet fastapi uvicorn
+
 $desktop = [Environment]::GetFolderPath("Desktop")
 $lnk = Join-Path $desktop "AI Music Studio.lnk"
 $sh = (New-Object -ComObject WScript.Shell).CreateShortcut($lnk)
